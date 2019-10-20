@@ -8,11 +8,11 @@
 # Payvision calculator
 
 My tasks in this exercise were: 
-1) maintainance and new features development
-2) code review
-3) fix bugs in the app
-4) think about testing my app
-5) improve UX/UI
+1) Maintainance and new features development
+2) Code review
+3) Fix bugs in the app
+4) Think about testing my app
+5) Improve UX/UI
 
 ### 1. Code review and new features
 I've decided to implement 3 new features (multiply and divide operations, changes on clear button). 
@@ -39,14 +39,13 @@ Added a test planning to calculator.test.js file.
 
 ### 5. UI/UX design
 
-A few essencial UI feautures: 
-- I've changed color to blue corporate color to make it easier on the eyes of a user
-- Changed buttons position to follow a classic calculator pattern as well as adjusted some margins and deleted outline from our buttons.
-- Visual feedback on buttons when clicked
-UX: 
-- friendly message that shows user that his action is forbidden but in a friendly tone.
-- All of our buttons give us feedback when clicked
-- Next step would be think about accessibility and implement typing numbers from keyboard.
+A few essencial UI and UX feautures: 
+- UI: I've changed color to blue corporate color to make it easier on the eyes of a user
+- UI: Changed buttons position to follow a classic calculator pattern as well as adjusted some margins and deleted outline from our buttons.
+- UI: Visual feedback on buttons when clicked
+- UX: friendly message that shows user that his action is forbidden but in a friendly tone.
+- UX: All of our buttons give us feedback when clicked
+- UX: Next step would be think about accessibility and implement typing numbers from keyboard.
 
 ## How to run the application using local server
 
