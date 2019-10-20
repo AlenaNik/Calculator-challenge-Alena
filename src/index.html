@@ -1,0 +1,226 @@
+<h2>Payvision Calculator</h2>
+
+<div id="calculator" class="calculator">
+  <div id="viewer" class="viewer">0</div>
+  <button id="btn" class="num" data-num="7">7</button>
+  <button id="btn" class="num" data-num="8">8</button>
+  <button id="btn" class="num" data-num="9">9</button>
+  <button id="clear" class="clear">AC</button>
+  <button id="btn" class="num" data-num="4">4</button>
+  <button id="btn" class="num" data-num="5">5</button>
+  <button id="btn" class="num" data-num="6">6</button>
+  <button data-ops="multiply" class="ops">*</button>
+  <button id="btn" class="num" data-num="1">1</button>
+  <button id="btn" class="num" data-num="2">2</button>
+  <button id="btn" class="num" data-num="3">3</button>
+  <button data-ops="divide" class="ops">/</button>
+  <button id="btn" class="num zerobutton" data-num="0">0</button>
+  <button data-ops="plus" class="ops">+</button>
+  <button data-ops="minus" class="ops">-</button>
+  <button id="btn" class="num" data-num=".">.</button>
+  <button id="equals" class="equals" data-result="">=</button>
+
+
+</div>
+
+<style>
+  body {
+    background-color: #3237be;
+    font: 300 18px/1.6 "Source Sans Pro", sans-serif;
+    margin: 0;
+    padding: 2em 0 2em;
+    text-align: center;
+    color: rgb(200, 255, 225);
+  }
+
+  h2 {
+    font-weight: 300;
+    margin: 0;
+    padding-bottom: 20px;
+  }
+
+  .calculator {
+    font-size: 28px;
+    margin: 0 auto;
+    width: 10em;
+
+    &::before,
+    &::after {
+      content: " ";
+      display: table;
+    }
+
+    &::after {
+      clear: both;
+    }
+  }
+
+
+  .viewer {
+    line-height: 1em;
+    text-align: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 3em;
+  }
+
+  button {
+    border: 0;
+    background: rgba(42, 50, 113, 0.28);
+    color: rgb(200, 255, 225);
+    cursor: pointer;
+    float: left;
+    font: inherit;
+    margin: 0.25em;
+    width: 2em;
+    height: 2em;
+    transition: all 0.5s;
+    outline:none;
+  }
+  button:active {
+    background: #4149db;
+  }
+
+  .clear {
+    color: #ff7d6d;
+  }
+  .zerobutton {
+    width: 9.5em;
+    background: #4149db;
+  }
+  .zerobutton:active {
+    background: #3237be;
+  }
+
+</style>
+
+<script>
+// In this block we are getting all element by using a shortcut.
+// If we pass an ID we are getting an element, otherwise a nodelist
+// (I've decided not to use iife in this script, since we don't have any other js files
+// in the project and won't pollute the global variables or functions and we don't need to
+// module our code)
+
+let el = function(element) {
+    if (element.charAt(0) === "#") {
+      return document.querySelector(element);
+      }
+      return document.querySelectorAll(element);
+    };
+
+// Getting all our elements and put them into variable.
+// Using let from ES6 sintax instead of var.
+// I've added a clear variable that reference el('#clear')
+// to keep everything consistent
+
+    let viewer = el('#viewer'), // The screen where number or error message is displayed
+      equals = el('#equals'), // Equal button
+      nums = el('.num'), // List of numbers
+      ops = el('.ops'), // List of operators
+      clear = el('#clear'), // Clear button
+      theNum = '', // Current number
+      oldNum = '', // First number
+      resultNum, // Result
+      operator; // Declaring operator for later usage
+
+// Starting building out functions
+// The first function is getting the clicked data-number.
+// if the result was displayed, the number resets, othervwise
+// we adding a digit to a previous number and display it to the viewer
+// I also added some funcionality to the clear button here.
+// Ex. Macbook calculator sets clear from AC to C when num is typed
+    let setNum = function() {
+      if (resultNum) {
+        theNum = this.getAttribute('data-num');
+        resultNum = '';
+        clear.textContent = 'AC';
+      } else {
+        theNum += this.getAttribute('data-num');
+        clear.textContent = 'C';
+      }
+      viewer.innerHTML = theNum;
+    };
+// Second function. When the operator button is clicked, we pass number
+// to oldNum and save operator
+    let moveNum = function() {
+      oldNum = theNum;
+      theNum = "";
+      operator = this.getAttribute('data-ops');
+      equals.setAttribute('data-result', '');
+    };
+// This function performs the operations.
+// We using parseFloat to convert a string input into the numbers
+// I've added multiply and divide cases
+    let displayNum = function() {
+      oldNum = parseFloat(oldNum);
+      theNum = parseFloat(theNum);
+      switch (operator) {
+        case "plus":
+          resultNum = oldNum + theNum;
+          break;
+        case "minus":
+          resultNum = oldNum - theNum;
+          break;
+        case "multiply":
+          resultNum = oldNum * theNum;
+          break;
+        case "divide":
+          resultNum = oldNum / theNum;
+          break;
+// If equal is pressed without an operator,
+// keep number and continue
+        default:
+          resultNum = theNum;
+      }
+
+
+// Error case when NaN or Infinity returned
+// If result is not a number; set off by, eg, double-clicking operators
+// If result is infinity, set off by dividing by zero
+// I've decided to change an error message to more user-friendly one, that
+//doesn't scare users off and deleted broken class since we already have an
+//error message
+      if (!isFinite(resultNum)) {
+        if (isNaN(resultNum)) {
+          resultNum = "Something went wrong! Please try again!";
+        } else {
+          resultNum = "Sorry, can't divide by 0. Try something else instead :)";
+        }
+      }
+// Displaying results of our operations
+
+      viewer.innerHTML = resultNum;
+      equals.setAttribute("data-result", resultNum);
+
+// Setting old number to zero but keeping the result
+      oldNum = 0;
+      theNum = resultNum;
+    };
+
+// A function for when the clear button is pressed.
+// Clear everything and set clear button to AC
+    let clearAll = function() {
+      oldNum = "";
+      theNum = "";
+      viewer.innerHTML = "0";
+      equals.setAttribute("data-result", resultNum);
+      clear.textContent = 'AC';
+    };
+
+// Hook up the event listeners
+
+// Add click event to numbers
+    for (let i = 0, l = nums.length; i < l; i++) {
+      nums[i].onclick = setNum;
+    }
+// Add click event to operators
+    for (let i = 0, l = ops.length; i < l; i++) {
+      ops[i].onclick = moveNum;
+    }
+// Add click event to equal sign
+    equals.onclick = displayNum;
+
+    // Add click event to clear button
+    clear.onclick = clearAll;
+
+</script>
