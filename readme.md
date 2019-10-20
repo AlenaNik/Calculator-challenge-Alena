@@ -35,7 +35,7 @@ As for package.json version ("version": "1.2.2") the number is unique ID for eve
 
 ### 4. Test automation
 
-
+Added a test planning to calculator.test.js file.
 
 ### 5. UI/UX design
 
